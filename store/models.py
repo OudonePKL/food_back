@@ -166,6 +166,7 @@ class Review(models.Model):
     rating = models.IntegerField()
     comment = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Review for {self.product.name} by {self.user.email}"

@@ -42,10 +42,10 @@ class GoodsSerializer(serializers.ModelSerializer):
         return store_name
 
     def get_star_avg(self, obj):
-        review = ReviewModel.objects.filter(goods_id=obj.id).values("star")
+        review = Review.objects.filter(product_id=obj.id).values("rating")
         total = 0
         for i in review:
-            total += i["star"]
+            total += i["rating"]
 
         return math.ceil(total / review.count()) if total != 0 else 0
 
@@ -259,10 +259,10 @@ class GoodsDetailSerializer(serializers.ModelSerializer):
         return obj.store.seller.profile_image.url if obj.store.seller.profile_image else False
 
     def get_star_avg(self, obj):
-        review = ReviewModel.objects.filter(goods_id=obj.id).values("star")
+        review = Review.objects.filter(product_id=obj.id).values("rating")
         total = 0
         for i in review:
-            total += i["star"]
+            total += i["rating"]
 
         return math.ceil(total / review.count()) if total != 0 else 0
 
@@ -465,10 +465,10 @@ class OnlyStoreGoodsSerializer(serializers.ModelSerializer):
         return str(format_with_commas(obj.price))
 
     def get_star_avg(self, obj):
-        review = ReviewModel.objects.filter(goods_id=obj.id).values("star")
+        review = Review.objects.filter(product_id=obj.id).values("rating")
         total = 0
         for i in review:
-            total += i["star"]
+            total += i["rating"]
 
         return math.ceil(total / review.count()) if total != 0 else 0
 
@@ -491,7 +491,7 @@ class OnlyStoreReviewSerializer(serializers.ModelSerializer):
         return obj.user.nickname
 
     def get_goods_id(self, obj):
-        return obj.goods.id
+        return obj.product.id
 
     def get_created_at(self, obj):
         return obj.created_at.strftime("%Y.%m.%d")
@@ -500,11 +500,11 @@ class OnlyStoreReviewSerializer(serializers.ModelSerializer):
         return obj.user.profile_image.url if obj.user.profile_image else None
 
     class Meta:
-        model = ReviewModel
-        exclude = ["updated_at", "goods", "id"]
+        model = Review
+        exclude = ["updated_at", "product", "id"]
         extra_kwargs = {
             "user": {"required": False},
-            "goods": {"required": False},
+            "product": {"required": False},
         }
 
 
